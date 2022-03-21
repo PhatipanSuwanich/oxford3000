@@ -128,7 +128,8 @@ class _LearnPageState extends State<LearnPage> {
           ),
         ],
       );
-    } else {
+    }
+    else {
       content = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -187,11 +188,14 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   void nextWord() {
-    Navigator.of(context, rootNavigator: true).pop();
+    Get.back();
+    total = 102 - eng.length;
+    if (total == 101) {
+      Get.back();
+    }
     setState(() {
       eng.removeAt(0);
       th.removeAt(0);
-      total = 101 - eng.length;
       answerController.text = "";
     });
   }
