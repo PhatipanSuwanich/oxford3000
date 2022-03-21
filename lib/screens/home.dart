@@ -37,13 +37,13 @@ class _HomeState extends State<Home> {
               SizedBox(height: 50),
               ElevatedButton(
                   onPressed: () {},
-                  child: Text("สุ่มภาษาอังกฤษ", style: size18)),
+                  child: Text("สุ่มภาษาอังกฤษ", style: size24)),
               SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
                     Get.toNamed('/learn');
                   },
-                  child: Text("สุ่มภาษาไทย", style: size18))
+                  child: Text("สุ่มภาษาไทย", style: size24))
             ],
           ),
         ),

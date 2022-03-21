@@ -1,9 +1,10 @@
-// ignore_for_file: empty_constructor_bodies, prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors
 
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:get/get.dart';
 
 import '../constants.dart';
 import '../models/vocabulary.dart';
@@ -18,21 +19,23 @@ class LearnPage extends StatefulWidget {
 class _LearnPageState extends State<LearnPage> {
   late Vocabulary vocab;
   final FlutterTts flutterTts = FlutterTts();
+  TextEditingController answerController = TextEditingController();
+  int total = 1;
 
   @override
   void initState() {
     super.initState();
     vocab = Vocabulary.fromJson(mockJsonMenu);
-    var num = Random().nextInt(50);
-    vocab.eng!.shuffle(Random(num));
-    vocab.th!.shuffle(Random(num));
+    var random = Random().nextInt(50);
+    vocab.eng!.shuffle(Random(random));
+    vocab.th!.shuffle(Random(random));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(30),
-      // constraints: BoxConstraints.expand(),
+      constraints: BoxConstraints.expand(),
       decoration: BoxDecoration(
         image: DecorationImage(
             image: AssetImage("assets/images/bg.jpg"), fit: BoxFit.cover),
@@ -40,21 +43,30 @@ class _LearnPageState extends State<LearnPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(vocab.th![2],
-                style: TextStyle(
-                    backgroundColor: Colors.white,
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold)),
-            englishSound(),
-            SizedBox(height: 40),
-            Answer(),
-            SizedBox(height: 50),
-            CheckButton(),
-          ],
+        body: SizedBox(
+          width: Get.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(vocab.th![0],
+                  style: TextStyle(
+                      backgroundColor: Colors.white,
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold)),
+              englishSound(),
+              SizedBox(height: 40),
+              Answer(),
+              SizedBox(height: 50),
+              CheckButton(),
+              SizedBox(height: 80),
+              Text("คำที่ $total / 100",
+                  style: TextStyle(
+                      backgroundColor: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
         ),
       ),
     );
@@ -62,36 +74,131 @@ class _LearnPageState extends State<LearnPage> {
 
   Container englishSound() {
     return Container(
-            color: Colors.white,
-            child: TextButton.icon(
-                onPressed: () => speakWord(),
-                icon: Icon(
-                  Icons.volume_up_sharp,
-                  color: Colors.teal,
-                ),
-                label: Text(
-                  'English Sound',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.teal,
-                  ),
-                )),
-          );
+      color: Colors.white,
+      child: TextButton.icon(
+          onPressed: () => speakWord(),
+          icon: Icon(
+            Icons.volume_up_sharp,
+            color: Colors.teal,
+          ),
+          label: Text(
+            'English Sound',
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.teal,
+            ),
+          )),
+    );
   }
 
   SizedBox CheckButton() {
     return SizedBox(
       width: 620,
       height: 40,
-      child:
-          ElevatedButton(onPressed: () {}, child: Text("ตรวจ", style: size18)),
+      child: ElevatedButton(
+          onPressed: () => CheckAnswer(), child: Text("ตรวจ", style: size24)),
     );
+  }
+
+  void CheckAnswer() {
+    Widget content;
+    speakWord();
+    if (answerController.text == vocab.eng![0]) {
+      content = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("ถูกต้อง",
+              style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.teal,
+                  decoration: TextDecoration.none)),
+          SizedBox(height: 15),
+          SizedBox(
+            width: Get.width,
+            child: ElevatedButton(
+              onPressed: () => nextWord(),
+              child: Text("ถัดไป", style: size24),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      content = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "คำตอบที่ถูกต้อง : ${vocab.eng![0]}",
+            style: TextStyle(
+                fontSize: 24,
+                color: Colors.red,
+                decoration: TextDecoration.none),
+          ),
+          SizedBox(height: 15),
+          SizedBox(
+            width: Get.width,
+            child: ElevatedButton(
+              onPressed: () => nextWord(),
+              child: Text("ถัดไป", style: size24),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    showGeneralDialog(
+      barrierLabel: "lable",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 300),
+      context: context,
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 00, 10, 0),
+            height: 100,
+            width: 620,
+            child: content,
+            margin: EdgeInsets.only(bottom: 50, left: 10, right: 10),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
+  }
+
+  void nextWord() {
+    Navigator.of(context, rootNavigator: true).pop();
+    setState(() {
+      vocab.eng?.removeAt(0);
+      vocab.th?.removeAt(0);
+      total = 101 - vocab.eng!.length;
+      answerController.text = "";
+    });
   }
 
   SizedBox Answer() {
     return SizedBox(
       width: 620,
-      child: TextFormField(
+      child: TextField(
+        controller: answerController,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey,
@@ -103,6 +210,7 @@ class _LearnPageState extends State<LearnPage> {
 
   Future speakWord() async {
     await flutterTts.setLanguage("en-US");
-    await flutterTts.speak(vocab.eng![2]);
+    await flutterTts.setSpeechRate(0.2);
+    await flutterTts.speak(vocab.eng![0]);
   }
 }

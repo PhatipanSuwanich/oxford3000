@@ -5,6 +5,7 @@ const kSecondaryColor = Color(0xFFF3F6F8);
 const kTextColor = Color(0xFF171717);
 
 const size18 = TextStyle(fontSize: 18.0);
+const size24 = TextStyle(fontSize: 24.0);
 const sizeB24 = TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold);
 const sizeB32 = TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold);
 const size32 = TextStyle(fontSize: 32.0);
