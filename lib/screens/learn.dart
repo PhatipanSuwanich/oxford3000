@@ -17,7 +17,8 @@ class LearnPage extends StatefulWidget {
 }
 
 class _LearnPageState extends State<LearnPage> {
-  late Vocabulary vocab;
+  late List<String> eng;
+  late List<String> th;
   final FlutterTts flutterTts = FlutterTts();
   TextEditingController answerController = TextEditingController();
   int total = 1;
@@ -25,10 +26,11 @@ class _LearnPageState extends State<LearnPage> {
   @override
   void initState() {
     super.initState();
-    vocab = Vocabulary.fromJson(mockJsonMenu);
+    eng = Vocabulary.fromJson(mockJsonMenu).eng!.toList();
+    th = Vocabulary.fromJson(mockJsonMenu).th!.toList();
     var random = Random().nextInt(50);
-    vocab.eng!.shuffle(Random(random));
-    vocab.th!.shuffle(Random(random));
+    eng.shuffle(Random(random));
+    th.shuffle(Random(random));
   }
 
   @override
@@ -49,7 +51,7 @@ class _LearnPageState extends State<LearnPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(vocab.th![0],
+              Text(th[0],
                   style: TextStyle(
                       backgroundColor: Colors.white,
                       fontSize: 32.0,
@@ -103,7 +105,7 @@ class _LearnPageState extends State<LearnPage> {
   void CheckAnswer() {
     Widget content;
     speakWord();
-    if (answerController.text == vocab.eng![0]) {
+    if (answerController.text == eng[0]) {
       content = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,7 +134,7 @@ class _LearnPageState extends State<LearnPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "คำตอบที่ถูกต้อง : ${vocab.eng![0]}",
+            "คำตอบที่ถูกต้อง : ${eng[0]}",
             style: TextStyle(
                 fontSize: 24,
                 color: Colors.red,
@@ -177,7 +179,7 @@ class _LearnPageState extends State<LearnPage> {
       transitionBuilder: (context, anim1, anim2, child) {
         return SlideTransition(
           position:
-              Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+          Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
           child: child,
         );
       },
@@ -187,9 +189,9 @@ class _LearnPageState extends State<LearnPage> {
   void nextWord() {
     Navigator.of(context, rootNavigator: true).pop();
     setState(() {
-      vocab.eng?.removeAt(0);
-      vocab.th?.removeAt(0);
-      total = 101 - vocab.eng!.length;
+      eng.removeAt(0);
+      th.removeAt(0);
+      total = 101 - eng.length;
       answerController.text = "";
     });
   }
@@ -211,6 +213,6 @@ class _LearnPageState extends State<LearnPage> {
   Future speakWord() async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setSpeechRate(0.2);
-    await flutterTts.speak(vocab.eng![0]);
+    await flutterTts.speak(eng[0]);
   }
 }
