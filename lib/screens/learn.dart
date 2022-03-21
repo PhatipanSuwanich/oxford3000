@@ -26,8 +26,8 @@ class _LearnPageState extends State<LearnPage> {
   @override
   void initState() {
     super.initState();
-    eng = Vocabulary.fromJson(mockJsonMenu).eng!.toList();
-    th = Vocabulary.fromJson(mockJsonMenu).th!.toList();
+    eng = Vocabulary.fromJson(mockJsonWord).eng!.toList();
+    th = Vocabulary.fromJson(mockJsonWord).th!.toList();
     var random = Random().nextInt(50);
     eng.shuffle(Random(random));
     th.shuffle(Random(random));

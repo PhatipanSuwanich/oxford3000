@@ -1,4 +1,4 @@
-Map<String, dynamic> mockJsonMenu = {
+Map<String, dynamic> mockJsonWord = {
   "th": [
     "หนึ่ง",
     "ละทิ้ง ปล่อย พลัดพรากจาก",

@@ -11,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   @override
   void initState() {
     super.initState();
@@ -19,7 +18,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -33,17 +31,18 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: Get.width),
-              Text("เกมแปลคําศัพท์", style: sizeB32),
+              Text("เกมแปลคําศัพท์ Oxford Wordlist", style: sizeB32),
               SizedBox(height: 50),
               ElevatedButton(
-                  onPressed: () {},
-                  child: Text("สุ่มภาษาอังกฤษ", style: size24)),
-              SizedBox(height: 20),
-              ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed('/learn');
-                  },
-                  child: Text("สุ่มภาษาไทย", style: size24))
+                onPressed: () {
+                  Get.toNamed('/learn');
+                },
+                child: Text("Game Start!!", style: size24),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.teal,
+                  minimumSize: Size(200, 60),
+                ),
+              )
             ],
           ),
         ),
